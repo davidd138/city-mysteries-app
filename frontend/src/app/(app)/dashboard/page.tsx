@@ -19,7 +19,7 @@ export default function DashboardPage() {
     try {
       const session = await startGame({ input: { mysteryId } });
       if (session) {
-        router.push(`/play/${mysteryId}/?sessionId=${session.id}`);
+        router.push(`/play/?mysteryId=${mysteryId}&sessionId=${session.id}`);
       }
     } catch (e) {
       console.error('Failed to start game:', e);
