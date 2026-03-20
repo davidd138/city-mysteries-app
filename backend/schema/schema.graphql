@@ -1,0 +1,113 @@
+type User @aws_cognito_user_pools {
+  userId: String!
+  email: String!
+  name: String
+  status: String!
+  createdAt: String
+}
+
+type Location @aws_cognito_user_pools {
+  lat: Float!
+  lng: Float!
+}
+
+type StatueLocation @aws_cognito_user_pools {
+  lat: Float!
+  lng: Float!
+  name: String!
+}
+
+type Character @aws_cognito_user_pools {
+  characterId: String!
+  mysteryId: String!
+  name: String!
+  historicalPeriod: String!
+  description: String!
+  statue: StatueLocation!
+  clues: [String!]!
+  voice: String
+  persona: String!
+}
+
+type Mystery @aws_cognito_user_pools {
+  id: String!
+  title: String!
+  description: String!
+  city: String!
+  location: Location!
+  radius: Int!
+  difficulty: String!
+  characters: [Character!]
+  solution: String!
+  active: Boolean!
+  imageUrl: String
+  createdAt: String
+}
+
+type Interaction @aws_cognito_user_pools {
+  sessionId: String!
+  characterId: String!
+  characterName: String
+  transcript: String
+  cluesRevealed: [String!]
+  timestamp: String!
+}
+
+type GameSession @aws_cognito_user_pools {
+  id: String!
+  mysteryId: String!
+  mysteryTitle: String
+  userId: String!
+  status: String!
+  interactions: [Interaction!]
+  startedAt: String!
+  completedAt: String
+  solved: Boolean
+}
+
+type GameSessionList @aws_cognito_user_pools {
+  items: [GameSession!]!
+  nextToken: String
+}
+
+type GameResult @aws_cognito_user_pools {
+  correct: Boolean!
+  message: String!
+  session: GameSession!
+}
+
+type RealtimeToken @aws_cognito_user_pools {
+  token: String!
+  expiresAt: Int!
+}
+
+input StartGameInput {
+  mysteryId: String!
+}
+
+input RecordInteractionInput {
+  sessionId: String!
+  characterId: String!
+  transcript: String
+  cluesRevealed: [String!]
+}
+
+input SubmitSolutionInput {
+  sessionId: String!
+  solution: String!
+}
+
+type Query {
+  listMysteries: [Mystery!]! @aws_cognito_user_pools
+  getMystery(id: String!): Mystery @aws_cognito_user_pools
+  getGameSession(id: String!): GameSession @aws_cognito_user_pools
+  listGameSessions(limit: Int, nextToken: String): GameSessionList! @aws_cognito_user_pools
+  getRealtimeToken(characterId: String!, mysteryId: String!): RealtimeToken! @aws_cognito_user_pools
+}
+
+type Mutation {
+  syncUser: User! @aws_cognito_user_pools
+  startGame(input: StartGameInput!): GameSession! @aws_cognito_user_pools
+  recordInteraction(input: RecordInteractionInput!): Interaction! @aws_cognito_user_pools
+  submitSolution(input: SubmitSolutionInput!): GameResult! @aws_cognito_user_pools
+}

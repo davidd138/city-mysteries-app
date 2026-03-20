@@ -1,0 +1,36 @@
+{
+  "version": "52.0.0",
+  "files": {
+    "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6": {
+      "displayName": "CityMysteriesPipeline/CityMysteriesDev/FrontendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider Code",
+      "source": {
+        "path": "../asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "890742600627-eu-west-1-4440ec0a": {
+          "bucketName": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+          "objectKey": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::890742600627:role/cdk-hnb659fds-file-publishing-role-890742600627-eu-west-1"
+        }
+      }
+    },
+    "bea1271a3c79565065b1a6112e3d36a5e5c78581641c9c34dfcba3ab907b8f69": {
+      "displayName": "CityMysteriesDev-FrontendStack Template",
+      "source": {
+        "path": "CityMysteriesPipelineCityMysteriesDevFrontendStack2611C353.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "890742600627-eu-west-1-235c03e8": {
+          "bucketName": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+          "objectKey": "bea1271a3c79565065b1a6112e3d36a5e5c78581641c9c34dfcba3ab907b8f69.json",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::890742600627:role/cdk-hnb659fds-file-publishing-role-890742600627-eu-west-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

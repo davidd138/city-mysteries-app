@@ -1,0 +1,3845 @@
+{
+ "Resources": {
+  "PreSignupFnServiceRole9C74C2BE": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/PreSignupFn/ServiceRole/Resource"
+   }
+  },
+  "PreSignupFn7FD1E561": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "30d2710e6619bb41f15cfb651ad5ab8a8a827c33f40f668e932631cdfb2f573c.zip"
+    },
+    "FunctionName": "dev-cm-pre-signup",
+    "Handler": "pre_signup.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "PreSignupFnServiceRole9C74C2BE",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11"
+   },
+   "DependsOn": [
+    "PreSignupFnServiceRole9C74C2BE"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/PreSignupFn/Resource",
+    "aws:asset:path": "../asset.30d2710e6619bb41f15cfb651ad5ab8a8a827c33f40f668e932631cdfb2f573c",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "UserPoolPreSignUpCognito3AFF8F1F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "PreSignupFn7FD1E561",
+      "Arn"
+     ]
+    },
+    "Principal": "cognito-idp.amazonaws.com",
+    "SourceArn": {
+     "Fn::GetAtt": [
+      "UserPool6BA7E5F2",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPool/PreSignUpCognito"
+   }
+  },
+  "UserPool6BA7E5F2": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "LambdaConfig": {
+     "PreSignUp": {
+      "Fn::GetAtt": [
+       "PreSignupFn7FD1E561",
+       "Arn"
+      ]
+     }
+    },
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "dev-cm-users",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPool/Resource"
+   }
+  },
+  "UserPoolAppClientDD0407EC": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AllowedOAuthFlows": [
+     "implicit",
+     "code"
+    ],
+    "AllowedOAuthFlowsUserPoolClient": true,
+    "AllowedOAuthScopes": [
+     "profile",
+     "phone",
+     "email",
+     "openid",
+     "aws.cognito.signin.user.admin"
+    ],
+    "CallbackURLs": [
+     "https://example.com"
+    ],
+    "ClientName": "dev-cm-app-client",
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPool/AppClient/Resource"
+   }
+  },
+  "UsersTable9725E9C8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "email",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "email-index",
+      "KeySchema": [
+       {
+        "AttributeName": "email",
+        "KeyType": "HASH"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "userId",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "dev-cm-users"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/UsersTable/Resource"
+   }
+  },
+  "MysteriesTableEB2AC0DD": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "dev-cm-mysteries"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/MysteriesTable/Resource"
+   }
+  },
+  "CharactersTable0F2A9F65": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "mysteryId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "characterId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "mysteryId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "characterId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "dev-cm-characters"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/CharactersTable/Resource"
+   }
+  },
+  "GameSessionsTable8ACC8A38": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "startedAt",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "userId-createdAt-index",
+      "KeySchema": [
+       {
+        "AttributeName": "userId",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "startedAt",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "dev-cm-game-sessions"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/GameSessionsTable/Resource"
+   }
+  },
+  "InteractionsTable6E66EFF7": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "sessionId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "characterId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "sessionId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "characterId",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "dev-cm-interactions"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/InteractionsTable/Resource"
+   }
+  },
+  "OpenAISecretAD3AE700": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "OpenAI API Key for Realtime voice sessions",
+    "GenerateSecretString": {},
+    "Name": "dev/openai-api-key"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/OpenAISecret/Resource"
+   }
+  },
+  "MapboxSecret974D60ED": {
+   "Type": "AWS::SecretsManager::Secret",
+   "Properties": {
+    "Description": "Mapbox API Key for map rendering",
+    "GenerateSecretString": {},
+    "Name": "dev/mapbox-api-key"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/MapboxSecret/Resource"
+   }
+  },
+  "ApiF70053CD": {
+   "Type": "AWS::AppSync::GraphQLApi",
+   "Properties": {
+    "AuthenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "Name": "dev-cm-api",
+    "UserPoolConfig": {
+     "AwsRegion": "eu-west-1",
+     "DefaultAction": "ALLOW",
+     "UserPoolId": {
+      "Ref": "UserPool6BA7E5F2"
+     }
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/Resource"
+   }
+  },
+  "ApiSchema510EECD7": {
+   "Type": "AWS::AppSync::GraphQLSchema",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "Definition": "type User @aws_cognito_user_pools {\n  userId: String!\n  email: String!\n  name: String\n  status: String!\n  createdAt: String\n}\n\ntype Location @aws_cognito_user_pools {\n  lat: Float!\n  lng: Float!\n}\n\ntype StatueLocation @aws_cognito_user_pools {\n  lat: Float!\n  lng: Float!\n  name: String!\n}\n\ntype Character @aws_cognito_user_pools {\n  characterId: String!\n  mysteryId: String!\n  name: String!\n  historicalPeriod: String!\n  description: String!\n  statue: StatueLocation!\n  clues: [String!]!\n  voice: String\n  persona: String!\n}\n\ntype Mystery @aws_cognito_user_pools {\n  id: String!\n  title: String!\n  description: String!\n  city: String!\n  location: Location!\n  radius: Int!\n  difficulty: String!\n  characters: [Character!]\n  solution: String!\n  active: Boolean!\n  imageUrl: String\n  createdAt: String\n}\n\ntype Interaction @aws_cognito_user_pools {\n  sessionId: String!\n  characterId: String!\n  characterName: String\n  transcript: String\n  cluesRevealed: [String!]\n  timestamp: String!\n}\n\ntype GameSession @aws_cognito_user_pools {\n  id: String!\n  mysteryId: String!\n  mysteryTitle: String\n  userId: String!\n  status: String!\n  interactions: [Interaction!]\n  startedAt: String!\n  completedAt: String\n  solved: Boolean\n}\n\ntype GameSessionList @aws_cognito_user_pools {\n  items: [GameSession!]!\n  nextToken: String\n}\n\ntype GameResult @aws_cognito_user_pools {\n  correct: Boolean!\n  message: String!\n  session: GameSession!\n}\n\ntype RealtimeToken @aws_cognito_user_pools {\n  token: String!\n  expiresAt: Int!\n}\n\ninput StartGameInput {\n  mysteryId: String!\n}\n\ninput RecordInteractionInput {\n  sessionId: String!\n  characterId: String!\n  transcript: String\n  cluesRevealed: [String!]\n}\n\ninput SubmitSolutionInput {\n  sessionId: String!\n  solution: String!\n}\n\ntype Query {\n  listMysteries: [Mystery!]! @aws_cognito_user_pools\n  getMystery(id: String!): Mystery @aws_cognito_user_pools\n  getGameSession(id: String!): GameSession @aws_cognito_user_pools\n  listGameSessions(limit: Int, nextToken: String): GameSessionList! @aws_cognito_user_pools\n  getRealtimeToken(characterId: String!, mysteryId: String!): RealtimeToken! @aws_cognito_user_pools\n}\n\ntype Mutation {\n  syncUser: User! @aws_cognito_user_pools\n  startGame(input: StartGameInput!): GameSession! @aws_cognito_user_pools\n  recordInteraction(input: RecordInteractionInput!): Interaction! @aws_cognito_user_pools\n  submitSolution(input: SubmitSolutionInput!): GameResult! @aws_cognito_user_pools\n}\n"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/Schema"
+   }
+  },
+  "ApisyncuserDSServiceRole2506A08E": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userDS/ServiceRole/Resource"
+   }
+  },
+  "ApisyncuserDSServiceRoleDefaultPolicy3BC50BC3": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "syncuserFn714CF25D",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "syncuserFn714CF25D",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApisyncuserDSServiceRoleDefaultPolicy3BC50BC3",
+    "Roles": [
+     {
+      "Ref": "ApisyncuserDSServiceRole2506A08E"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApisyncuserDS269BCC74": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "syncuserFn714CF25D",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "sync_userDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApisyncuserDSServiceRole2506A08E",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userDS/Resource"
+   }
+  },
+  "ApisyncuserResolver6A65CA32": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "sync_userDS",
+    "FieldName": "syncUser",
+    "Kind": "UNIT",
+    "TypeName": "Mutation"
+   },
+   "DependsOn": [
+    "ApiSchema510EECD7",
+    "ApisyncuserDS269BCC74"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userResolver/Resource"
+   }
+  },
+  "ApilistmysteriesDSServiceRole9A020F6F": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesDS/ServiceRole/Resource"
+   }
+  },
+  "ApilistmysteriesDSServiceRoleDefaultPolicy9B751F8B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "listmysteriesFnA74E1B32",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "listmysteriesFnA74E1B32",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApilistmysteriesDSServiceRoleDefaultPolicy9B751F8B",
+    "Roles": [
+     {
+      "Ref": "ApilistmysteriesDSServiceRole9A020F6F"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApilistmysteriesDSE859D051": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "listmysteriesFnA74E1B32",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "list_mysteriesDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApilistmysteriesDSServiceRole9A020F6F",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesDS/Resource"
+   }
+  },
+  "ApilistmysteriesResolverB45F4185": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "list_mysteriesDS",
+    "FieldName": "listMysteries",
+    "Kind": "UNIT",
+    "TypeName": "Query"
+   },
+   "DependsOn": [
+    "ApilistmysteriesDSE859D051",
+    "ApiSchema510EECD7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesResolver/Resource"
+   }
+  },
+  "ApigetmysteryDSServiceRoleCFC1270D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryDS/ServiceRole/Resource"
+   }
+  },
+  "ApigetmysteryDSServiceRoleDefaultPolicyA0B020D6": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "getmysteryFn96E1B85A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "getmysteryFn96E1B85A",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApigetmysteryDSServiceRoleDefaultPolicyA0B020D6",
+    "Roles": [
+     {
+      "Ref": "ApigetmysteryDSServiceRoleCFC1270D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApigetmysteryDSC5BC3CB1": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "getmysteryFn96E1B85A",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "get_mysteryDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApigetmysteryDSServiceRoleCFC1270D",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryDS/Resource"
+   }
+  },
+  "ApigetmysteryResolverA5E60941": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "get_mysteryDS",
+    "FieldName": "getMystery",
+    "Kind": "UNIT",
+    "TypeName": "Query"
+   },
+   "DependsOn": [
+    "ApigetmysteryDSC5BC3CB1",
+    "ApiSchema510EECD7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryResolver/Resource"
+   }
+  },
+  "ApistartgameDSServiceRoleB503E6FD": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameDS/ServiceRole/Resource"
+   }
+  },
+  "ApistartgameDSServiceRoleDefaultPolicy7BA958C0": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "startgameFn24974C0E",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "startgameFn24974C0E",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApistartgameDSServiceRoleDefaultPolicy7BA958C0",
+    "Roles": [
+     {
+      "Ref": "ApistartgameDSServiceRoleB503E6FD"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApistartgameDS58952B97": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "startgameFn24974C0E",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "start_gameDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApistartgameDSServiceRoleB503E6FD",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameDS/Resource"
+   }
+  },
+  "ApistartgameResolver9CD079B7": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "start_gameDS",
+    "FieldName": "startGame",
+    "Kind": "UNIT",
+    "TypeName": "Mutation"
+   },
+   "DependsOn": [
+    "ApiSchema510EECD7",
+    "ApistartgameDS58952B97"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameResolver/Resource"
+   }
+  },
+  "ApigetgamesessionDSServiceRole1D77CC50": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionDS/ServiceRole/Resource"
+   }
+  },
+  "ApigetgamesessionDSServiceRoleDefaultPolicy260E1762": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "getgamesessionFn7996910C",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "getgamesessionFn7996910C",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApigetgamesessionDSServiceRoleDefaultPolicy260E1762",
+    "Roles": [
+     {
+      "Ref": "ApigetgamesessionDSServiceRole1D77CC50"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApigetgamesessionDSC2211743": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "getgamesessionFn7996910C",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "get_game_sessionDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApigetgamesessionDSServiceRole1D77CC50",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionDS/Resource"
+   }
+  },
+  "ApigetgamesessionResolverAFC29ABC": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "get_game_sessionDS",
+    "FieldName": "getGameSession",
+    "Kind": "UNIT",
+    "TypeName": "Query"
+   },
+   "DependsOn": [
+    "ApigetgamesessionDSC2211743",
+    "ApiSchema510EECD7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionResolver/Resource"
+   }
+  },
+  "ApilistgamesessionsDSServiceRole20AA57DE": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsDS/ServiceRole/Resource"
+   }
+  },
+  "ApilistgamesessionsDSServiceRoleDefaultPolicy7D3C9834": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "listgamesessionsFnDF54FD0A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "listgamesessionsFnDF54FD0A",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApilistgamesessionsDSServiceRoleDefaultPolicy7D3C9834",
+    "Roles": [
+     {
+      "Ref": "ApilistgamesessionsDSServiceRole20AA57DE"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApilistgamesessionsDSC51CB34D": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "listgamesessionsFnDF54FD0A",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "list_game_sessionsDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApilistgamesessionsDSServiceRole20AA57DE",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsDS/Resource"
+   }
+  },
+  "ApilistgamesessionsResolver7CDBF324": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "list_game_sessionsDS",
+    "FieldName": "listGameSessions",
+    "Kind": "UNIT",
+    "TypeName": "Query"
+   },
+   "DependsOn": [
+    "ApilistgamesessionsDSC51CB34D",
+    "ApiSchema510EECD7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsResolver/Resource"
+   }
+  },
+  "ApirecordinteractionDSServiceRoleD5F2927B": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionDS/ServiceRole/Resource"
+   }
+  },
+  "ApirecordinteractionDSServiceRoleDefaultPolicyD1B669C3": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "recordinteractionFn285B4BD0",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "recordinteractionFn285B4BD0",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApirecordinteractionDSServiceRoleDefaultPolicyD1B669C3",
+    "Roles": [
+     {
+      "Ref": "ApirecordinteractionDSServiceRoleD5F2927B"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApirecordinteractionDS85D79FC9": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "recordinteractionFn285B4BD0",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "record_interactionDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApirecordinteractionDSServiceRoleD5F2927B",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionDS/Resource"
+   }
+  },
+  "ApirecordinteractionResolverFE76F787": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "record_interactionDS",
+    "FieldName": "recordInteraction",
+    "Kind": "UNIT",
+    "TypeName": "Mutation"
+   },
+   "DependsOn": [
+    "ApirecordinteractionDS85D79FC9",
+    "ApiSchema510EECD7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionResolver/Resource"
+   }
+  },
+  "ApisubmitsolutionDSServiceRole83A0F6FB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionDS/ServiceRole/Resource"
+   }
+  },
+  "ApisubmitsolutionDSServiceRoleDefaultPolicyDC3345E2": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "submitsolutionFn305C1404",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "submitsolutionFn305C1404",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApisubmitsolutionDSServiceRoleDefaultPolicyDC3345E2",
+    "Roles": [
+     {
+      "Ref": "ApisubmitsolutionDSServiceRole83A0F6FB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApisubmitsolutionDSE1234D60": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "submitsolutionFn305C1404",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "submit_solutionDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApisubmitsolutionDSServiceRole83A0F6FB",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionDS/Resource"
+   }
+  },
+  "ApisubmitsolutionResolver10BBED27": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "submit_solutionDS",
+    "FieldName": "submitSolution",
+    "Kind": "UNIT",
+    "TypeName": "Mutation"
+   },
+   "DependsOn": [
+    "ApiSchema510EECD7",
+    "ApisubmitsolutionDSE1234D60"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionResolver/Resource"
+   }
+  },
+  "ApigetrealtimetokenDSServiceRole99AD46E9": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "appsync.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenDS/ServiceRole/Resource"
+   }
+  },
+  "ApigetrealtimetokenDSServiceRoleDefaultPolicy047D334B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "lambda:InvokeFunction",
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "getrealtimetokenFn30FA21D6",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "getrealtimetokenFn30FA21D6",
+             "Arn"
+            ]
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ApigetrealtimetokenDSServiceRoleDefaultPolicy047D334B",
+    "Roles": [
+     {
+      "Ref": "ApigetrealtimetokenDSServiceRole99AD46E9"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenDS/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "ApigetrealtimetokenDS291B4802": {
+   "Type": "AWS::AppSync::DataSource",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "LambdaConfig": {
+     "LambdaFunctionArn": {
+      "Fn::GetAtt": [
+       "getrealtimetokenFn30FA21D6",
+       "Arn"
+      ]
+     }
+    },
+    "Name": "get_realtime_tokenDS",
+    "ServiceRoleArn": {
+     "Fn::GetAtt": [
+      "ApigetrealtimetokenDSServiceRole99AD46E9",
+      "Arn"
+     ]
+    },
+    "Type": "AWS_LAMBDA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenDS/Resource"
+   }
+  },
+  "ApigetrealtimetokenResolver6EAFC1B5": {
+   "Type": "AWS::AppSync::Resolver",
+   "Properties": {
+    "ApiId": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "ApiId"
+     ]
+    },
+    "DataSourceName": "get_realtime_tokenDS",
+    "FieldName": "getRealtimeToken",
+    "Kind": "UNIT",
+    "TypeName": "Query"
+   },
+   "DependsOn": [
+    "ApigetrealtimetokenDS291B4802",
+    "ApiSchema510EECD7"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenResolver/Resource"
+   }
+  },
+  "ApiWaf": {
+   "Type": "AWS::WAFv2::WebACL",
+   "Properties": {
+    "DefaultAction": {
+     "Allow": {}
+    },
+    "Rules": [
+     {
+      "Action": {
+       "Block": {}
+      },
+      "Name": "RateLimit",
+      "Priority": 1,
+      "Statement": {
+       "RateBasedStatement": {
+        "AggregateKeyType": "IP",
+        "Limit": 1000
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "dev-cm-rate-limit",
+       "SampledRequestsEnabled": true
+      }
+     },
+     {
+      "Name": "AWSCommonRules",
+      "OverrideAction": {
+       "None": {}
+      },
+      "Priority": 2,
+      "Statement": {
+       "ManagedRuleGroupStatement": {
+        "Name": "AWSManagedRulesCommonRuleSet",
+        "VendorName": "AWS"
+       }
+      },
+      "VisibilityConfig": {
+       "CloudWatchMetricsEnabled": true,
+       "MetricName": "dev-cm-common-rules",
+       "SampledRequestsEnabled": true
+      }
+     }
+    ],
+    "Scope": "REGIONAL",
+    "VisibilityConfig": {
+     "CloudWatchMetricsEnabled": true,
+     "MetricName": "dev-cm-api-waf",
+     "SampledRequestsEnabled": true
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/ApiWaf"
+   }
+  },
+  "ApiWafAssociation": {
+   "Type": "AWS::WAFv2::WebACLAssociation",
+   "Properties": {
+    "ResourceArn": {
+     "Fn::GetAtt": [
+      "ApiF70053CD",
+      "Arn"
+     ]
+    },
+    "WebACLArn": {
+     "Fn::GetAtt": [
+      "ApiWaf",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/ApiWafAssociation"
+   }
+  },
+  "syncuserFnServiceRole258B320F": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/sync_userFn/ServiceRole/Resource"
+   }
+  },
+  "syncuserFnServiceRoleDefaultPolicy34B4C060": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cognito-idp:AdminGetUser",
+        "cognito-idp:AdminListGroupsForUser"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "UserPool6BA7E5F2",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "syncuserFnServiceRoleDefaultPolicy34B4C060",
+    "Roles": [
+     {
+      "Ref": "syncuserFnServiceRole258B320F"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/sync_userFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "syncuserFn714CF25D": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev",
+      "USER_POOL_ID": {
+       "Ref": "UserPool6BA7E5F2"
+      }
+     }
+    },
+    "FunctionName": "dev-cm-sync-user",
+    "Handler": "sync_user.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "syncuserFnServiceRole258B320F",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "syncuserFnServiceRoleDefaultPolicy34B4C060",
+    "syncuserFnServiceRole258B320F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/sync_userFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listmysteriesFnServiceRole126DB77D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_mysteriesFn/ServiceRole/Resource"
+   }
+  },
+  "listmysteriesFnServiceRoleDefaultPolicyEBA3352D": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CharactersTable0F2A9F65",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CharactersTable0F2A9F65",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "listmysteriesFnServiceRoleDefaultPolicyEBA3352D",
+    "Roles": [
+     {
+      "Ref": "listmysteriesFnServiceRole126DB77D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_mysteriesFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "listmysteriesFnA74E1B32": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-list-mysteries",
+    "Handler": "list_mysteries.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "listmysteriesFnServiceRole126DB77D",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "listmysteriesFnServiceRoleDefaultPolicyEBA3352D",
+    "listmysteriesFnServiceRole126DB77D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_mysteriesFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "getmysteryFnServiceRole980D5BAF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_mysteryFn/ServiceRole/Resource"
+   }
+  },
+  "getmysteryFnServiceRoleDefaultPolicyA05413D6": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CharactersTable0F2A9F65",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CharactersTable0F2A9F65",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "getmysteryFnServiceRoleDefaultPolicyA05413D6",
+    "Roles": [
+     {
+      "Ref": "getmysteryFnServiceRole980D5BAF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_mysteryFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "getmysteryFn96E1B85A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-get-mystery",
+    "Handler": "get_mystery.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "getmysteryFnServiceRole980D5BAF",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "getmysteryFnServiceRoleDefaultPolicyA05413D6",
+    "getmysteryFnServiceRole980D5BAF"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_mysteryFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "startgameFnServiceRole3CB41405": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/start_gameFn/ServiceRole/Resource"
+   }
+  },
+  "startgameFnServiceRoleDefaultPolicyAF40C775": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "startgameFnServiceRoleDefaultPolicyAF40C775",
+    "Roles": [
+     {
+      "Ref": "startgameFnServiceRole3CB41405"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/start_gameFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "startgameFn24974C0E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-start-game",
+    "Handler": "start_game.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "startgameFnServiceRole3CB41405",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "startgameFnServiceRoleDefaultPolicyAF40C775",
+    "startgameFnServiceRole3CB41405"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/start_gameFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "getgamesessionFnServiceRole651E0488": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_game_sessionFn/ServiceRole/Resource"
+   }
+  },
+  "getgamesessionFnServiceRoleDefaultPolicyD0F492DA": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "InteractionsTable6E66EFF7",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "InteractionsTable6E66EFF7",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "getgamesessionFnServiceRoleDefaultPolicyD0F492DA",
+    "Roles": [
+     {
+      "Ref": "getgamesessionFnServiceRole651E0488"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_game_sessionFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "getgamesessionFn7996910C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-get-game-session",
+    "Handler": "get_game_session.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "getgamesessionFnServiceRole651E0488",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "getgamesessionFnServiceRoleDefaultPolicyD0F492DA",
+    "getgamesessionFnServiceRole651E0488"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_game_sessionFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listgamesessionsFnServiceRole81C58C3C": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_game_sessionsFn/ServiceRole/Resource"
+   }
+  },
+  "listgamesessionsFnServiceRoleDefaultPolicyEE84F42A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "listgamesessionsFnServiceRoleDefaultPolicyEE84F42A",
+    "Roles": [
+     {
+      "Ref": "listgamesessionsFnServiceRole81C58C3C"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_game_sessionsFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "listgamesessionsFnDF54FD0A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-list-game-sessions",
+    "Handler": "list_game_sessions.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "listgamesessionsFnServiceRole81C58C3C",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "listgamesessionsFnServiceRoleDefaultPolicyEE84F42A",
+    "listgamesessionsFnServiceRole81C58C3C"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_game_sessionsFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "recordinteractionFnServiceRole9276DF1D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/record_interactionFn/ServiceRole/Resource"
+   }
+  },
+  "recordinteractionFnServiceRoleDefaultPolicy22A4F04C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "InteractionsTable6E66EFF7",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "InteractionsTable6E66EFF7",
+          "Arn"
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "recordinteractionFnServiceRoleDefaultPolicy22A4F04C",
+    "Roles": [
+     {
+      "Ref": "recordinteractionFnServiceRole9276DF1D"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/record_interactionFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "recordinteractionFn285B4BD0": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-record-interaction",
+    "Handler": "record_interaction.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "recordinteractionFnServiceRole9276DF1D",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "recordinteractionFnServiceRoleDefaultPolicy22A4F04C",
+    "recordinteractionFnServiceRole9276DF1D"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/record_interactionFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "submitsolutionFnServiceRole5DD262DF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/submit_solutionFn/ServiceRole/Resource"
+   }
+  },
+  "submitsolutionFnServiceRoleDefaultPolicy04A48D9B": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MysteriesTableEB2AC0DD",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "GameSessionsTable8ACC8A38",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "GameSessionsTable8ACC8A38",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "submitsolutionFnServiceRoleDefaultPolicy04A48D9B",
+    "Roles": [
+     {
+      "Ref": "submitsolutionFnServiceRole5DD262DF"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/submit_solutionFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "submitsolutionFn305C1404": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev"
+     }
+    },
+    "FunctionName": "dev-cm-submit-solution",
+    "Handler": "submit_solution.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "submitsolutionFnServiceRole5DD262DF",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "submitsolutionFnServiceRoleDefaultPolicy04A48D9B",
+    "submitsolutionFnServiceRole5DD262DF"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/submit_solutionFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "getrealtimetokenFnServiceRole9E0B4390": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_realtime_tokenFn/ServiceRole/Resource"
+   }
+  },
+  "getrealtimetokenFnServiceRoleDefaultPolicyC6793220": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "UsersTable9725E9C8",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CharactersTable0F2A9F65",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "CharactersTable0F2A9F65",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "OpenAISecretAD3AE700"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "getrealtimetokenFnServiceRoleDefaultPolicyC6793220",
+    "Roles": [
+     {
+      "Ref": "getrealtimetokenFnServiceRole9E0B4390"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_realtime_tokenFn/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "getrealtimetokenFn30FA21D6": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-890742600627-eu-west-1",
+     "S3Key": "2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "MYSTERIES_TABLE": {
+       "Ref": "MysteriesTableEB2AC0DD"
+      },
+      "CHARACTERS_TABLE": {
+       "Ref": "CharactersTable0F2A9F65"
+      },
+      "GAME_SESSIONS_TABLE": {
+       "Ref": "GameSessionsTable8ACC8A38"
+      },
+      "INTERACTIONS_TABLE": {
+       "Ref": "InteractionsTable6E66EFF7"
+      },
+      "ENV_NAME": "dev",
+      "OPENAI_SECRET_NAME": {
+       "Fn::Join": [
+        "-",
+        [
+         {
+          "Fn::Select": [
+           0,
+           {
+            "Fn::Split": [
+             "-",
+             {
+              "Fn::Select": [
+               6,
+               {
+                "Fn::Split": [
+                 ":",
+                 {
+                  "Ref": "OpenAISecretAD3AE700"
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "Fn::Select": [
+           1,
+           {
+            "Fn::Split": [
+             "-",
+             {
+              "Fn::Select": [
+               6,
+               {
+                "Fn::Split": [
+                 ":",
+                 {
+                  "Ref": "OpenAISecretAD3AE700"
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "Fn::Select": [
+           2,
+           {
+            "Fn::Split": [
+             "-",
+             {
+              "Fn::Select": [
+               6,
+               {
+                "Fn::Split": [
+                 ":",
+                 {
+                  "Ref": "OpenAISecretAD3AE700"
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       ]
+      }
+     }
+    },
+    "FunctionName": "dev-cm-get-realtime-token",
+    "Handler": "get_realtime_token.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "getrealtimetokenFnServiceRole9E0B4390",
+      "Arn"
+     ]
+    },
+    "Runtime": "python3.11",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "getrealtimetokenFnServiceRoleDefaultPolicyC6793220",
+    "getrealtimetokenFnServiceRole9E0B4390"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_realtime_tokenFn/Resource",
+    "aws:asset:path": "../asset.2ee5c04a11fb5c91b22f594e7af2f7b7ef23636b67514d7119f9f1354d49f4d3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WRTW/CMAyGfwv34A2YdgcmdkFaB5t2RG5q2ox8dEkKqqL896XpQOzk57WT2H4zh/nTAh4neHFTXp2mUpQQ9h75iaXUIUhUZYUQNp3mXhjN1kd9zwVZJZxLKjKBCsLOSBoKORZGCt7nc5kic4sDOkfewXIIScOq4yfyK3TEuKm18AbCpyNbGCOHqze+wloK0v6+NGYiq3qNylRphQ8sxzkypL7EbeqqUGNNNq2Y9XBgpMiwbV2vOYRXi23zI5etGMpZvW//qz1vSCHbZnNe0OPedJbnfndqR87IM9lsxx9HdsHjeQ4h5b6oXK637EbJEcMFDtbGyLI/6Sdqoev81LXDW+fbLg1c9L4x+mEBsxk8T76dEFPbaS8UwW6Mv/KtUprdAQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "CityMysteriesPipeline/CityMysteriesDev/BackendStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "GraphQLUrl": {
+   "Value": {
+    "Fn::GetAtt": [
+     "ApiF70053CD",
+     "GraphQLUrl"
+    ]
+   },
+   "Export": {
+    "Name": "dev-cm-graphql-url"
+   }
+  },
+  "UserPoolId": {
+   "Value": {
+    "Ref": "UserPool6BA7E5F2"
+   },
+   "Export": {
+    "Name": "dev-cm-user-pool-id"
+   }
+  },
+  "UserPoolClientId": {
+   "Value": {
+    "Ref": "UserPoolAppClientDD0407EC"
+   },
+   "Export": {
+    "Name": "dev-cm-user-pool-client-id"
+   }
+  },
+  "Region": {
+   "Value": "eu-west-1",
+   "Export": {
+    "Name": "dev-cm-region"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

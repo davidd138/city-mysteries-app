@@ -1,0 +1,67 @@
+digraph G {
+  # Arrows represent an "unlocks" relationship (opposite of dependency). So chosen
+  # because the layout looks more natural that way.
+  # To represent subgraph dependencies, subgraphs are represented by BEGIN/END nodes.
+  # To render: `dot -Tsvg CityMysteriesPipelineB3C0A428.dot > graph.svg`, open in a browser.
+  node [shape="box"];
+"BEGIN Build" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END Build" [shape="cds", style="filled", fillcolor="#b7deff"];
+"Build.Synth";
+"Source.davidd138/city-mysteries-app" -> "Build.Synth";
+"BEGIN Build" -> "Build.Synth";
+"Build.Synth" -> "END Build";
+"BEGIN UpdatePipeline" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END UpdatePipeline" [shape="cds", style="filled", fillcolor="#b7deff"];
+"UpdatePipeline.SelfMutate";
+"Build.Synth" -> "UpdatePipeline.SelfMutate";
+"BEGIN UpdatePipeline" -> "UpdatePipeline.SelfMutate";
+"UpdatePipeline.SelfMutate" -> "END UpdatePipeline";
+"BEGIN Assets" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END Assets" [shape="cds", style="filled", fillcolor="#b7deff"];
+"Assets.FileAsset1";
+"UpdatePipeline.SelfMutate" -> "Assets.FileAsset1";
+"Assets.FileAsset2";
+"UpdatePipeline.SelfMutate" -> "Assets.FileAsset2";
+"Assets.FileAsset3";
+"UpdatePipeline.SelfMutate" -> "Assets.FileAsset3";
+"BEGIN Assets" -> "Assets.FileAsset1";
+"BEGIN Assets" -> "Assets.FileAsset2";
+"BEGIN Assets" -> "Assets.FileAsset3";
+"Assets.FileAsset1" -> "END Assets";
+"Assets.FileAsset2" -> "END Assets";
+"Assets.FileAsset3" -> "END Assets";
+"BEGIN CityMysteriesDev" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END CityMysteriesDev" [shape="cds", style="filled", fillcolor="#b7deff"];
+"UpdatePipeline.SelfMutate" -> "BEGIN CityMysteriesDev";
+"BEGIN CityMysteriesDev.BackendStack" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END CityMysteriesDev.BackendStack" [shape="cds", style="filled", fillcolor="#b7deff"];
+"CityMysteriesDev.BackendStack.Deploy";
+"CityMysteriesDev.BackendStack.Prepare" -> "CityMysteriesDev.BackendStack.Deploy";
+"CityMysteriesDev.BackendStack.Prepare";
+"Build.Synth" -> "CityMysteriesDev.BackendStack.Prepare";
+"Assets.FileAsset1" -> "CityMysteriesDev.BackendStack.Prepare";
+"Assets.FileAsset2" -> "CityMysteriesDev.BackendStack.Prepare";
+"BEGIN CityMysteriesDev.BackendStack" -> "CityMysteriesDev.BackendStack.Prepare";
+"CityMysteriesDev.BackendStack.Deploy" -> "END CityMysteriesDev.BackendStack";
+"BEGIN CityMysteriesDev.FrontendStack" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END CityMysteriesDev.FrontendStack" [shape="cds", style="filled", fillcolor="#b7deff"];
+"CityMysteriesDev.FrontendStack.Deploy";
+"CityMysteriesDev.FrontendStack.Prepare" -> "CityMysteriesDev.FrontendStack.Deploy";
+"CityMysteriesDev.FrontendStack.Prepare";
+"Build.Synth" -> "CityMysteriesDev.FrontendStack.Prepare";
+"Assets.FileAsset3" -> "CityMysteriesDev.FrontendStack.Prepare";
+"BEGIN CityMysteriesDev.FrontendStack" -> "CityMysteriesDev.FrontendStack.Prepare";
+"CityMysteriesDev.FrontendStack.Deploy" -> "END CityMysteriesDev.FrontendStack";
+"CityMysteriesDev.DeployFrontend";
+"END CityMysteriesDev.BackendStack" -> "CityMysteriesDev.DeployFrontend";
+"END CityMysteriesDev.FrontendStack" -> "CityMysteriesDev.DeployFrontend";
+"Source.davidd138/city-mysteries-app" -> "CityMysteriesDev.DeployFrontend";
+"BEGIN CityMysteriesDev" -> "BEGIN CityMysteriesDev.BackendStack";
+"BEGIN CityMysteriesDev" -> "BEGIN CityMysteriesDev.FrontendStack";
+"CityMysteriesDev.DeployFrontend" -> "END CityMysteriesDev";
+"BEGIN Source" [shape="cds", style="filled", fillcolor="#b7deff"];
+"END Source" [shape="cds", style="filled", fillcolor="#b7deff"];
+"Source.davidd138/city-mysteries-app";
+"BEGIN Source" -> "Source.davidd138/city-mysteries-app";
+"Source.davidd138/city-mysteries-app" -> "END Source";
+}

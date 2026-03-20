@@ -1,0 +1,558 @@
+{
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UsersTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "UsersTable9725E9C8"
+      }
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/MysteriesTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "MysteriesTableEB2AC0DD"
+      }
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/CharactersTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "CharactersTable0F2A9F65"
+      }
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/GameSessionsTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "GameSessionsTable8ACC8A38"
+      }
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/InteractionsTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "InteractionsTable6E66EFF7"
+      }
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/ApiWaf": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiWaf"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/ApiWafAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiWafAssociation"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/GraphQLUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GraphQLUrl"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPoolId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolId"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPoolClientId": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolClientId"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Region": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Region"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/PreSignupFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PreSignupFn7FD1E561"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPool/PreSignUpCognito": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolPreSignUpCognito3AFF8F1F"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPool/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPool6BA7E5F2"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UsersTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UsersTable9725E9C8"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/MysteriesTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MysteriesTableEB2AC0DD"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/CharactersTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CharactersTable0F2A9F65"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/GameSessionsTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "GameSessionsTable8ACC8A38"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/InteractionsTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "InteractionsTable6E66EFF7"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/OpenAISecret/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "OpenAISecretAD3AE700"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/MapboxSecret/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MapboxSecret974D60ED"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiF70053CD"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/Schema": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiSchema510EECD7"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/sync_userFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "syncuserFn714CF25D"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_mysteriesFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "listmysteriesFnA74E1B32"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_mysteryFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getmysteryFn96E1B85A"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/start_gameFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "startgameFn24974C0E"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_game_sessionFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getgamesessionFn7996910C"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_game_sessionsFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "listgamesessionsFnDF54FD0A"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/record_interactionFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "recordinteractionFn285B4BD0"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/submit_solutionFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "submitsolutionFn305C1404"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_realtime_tokenFn/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getrealtimetokenFn30FA21D6"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/PreSignupFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PreSignupFnServiceRole9C74C2BE"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/UserPool/AppClient/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPoolAppClientDD0407EC"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisyncuserDS269BCC74"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisyncuserResolver6A65CA32"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistmysteriesDSE859D051"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistmysteriesResolverB45F4185"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetmysteryDSC5BC3CB1"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetmysteryResolverA5E60941"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApistartgameDS58952B97"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApistartgameResolver9CD079B7"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetgamesessionDSC2211743"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetgamesessionResolverAFC29ABC"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistgamesessionsDSC51CB34D"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistgamesessionsResolver7CDBF324"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApirecordinteractionDS85D79FC9"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApirecordinteractionResolverFE76F787"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisubmitsolutionDSE1234D60"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisubmitsolutionResolver10BBED27"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenDS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetrealtimetokenDS291B4802"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenResolver/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetrealtimetokenResolver6EAFC1B5"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/sync_userFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "syncuserFnServiceRole258B320F"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_mysteriesFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "listmysteriesFnServiceRole126DB77D"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_mysteryFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getmysteryFnServiceRole980D5BAF"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/start_gameFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "startgameFnServiceRole3CB41405"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_game_sessionFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getgamesessionFnServiceRole651E0488"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_game_sessionsFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "listgamesessionsFnServiceRole81C58C3C"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/record_interactionFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "recordinteractionFnServiceRole9276DF1D"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/submit_solutionFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "submitsolutionFnServiceRole5DD262DF"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_realtime_tokenFn/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getrealtimetokenFnServiceRole9E0B4390"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisyncuserDSServiceRole2506A08E"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistmysteriesDSServiceRole9A020F6F"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetmysteryDSServiceRoleCFC1270D"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApistartgameDSServiceRoleB503E6FD"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetgamesessionDSServiceRole1D77CC50"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistgamesessionsDSServiceRole20AA57DE"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApirecordinteractionDSServiceRoleD5F2927B"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisubmitsolutionDSServiceRole83A0F6FB"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenDS/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetrealtimetokenDSServiceRole99AD46E9"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/sync_userFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "syncuserFnServiceRoleDefaultPolicy34B4C060"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_mysteriesFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "listmysteriesFnServiceRoleDefaultPolicyEBA3352D"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_mysteryFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getmysteryFnServiceRoleDefaultPolicyA05413D6"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/start_gameFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "startgameFnServiceRoleDefaultPolicyAF40C775"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_game_sessionFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getgamesessionFnServiceRoleDefaultPolicyD0F492DA"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/list_game_sessionsFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "listgamesessionsFnServiceRoleDefaultPolicyEE84F42A"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/record_interactionFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "recordinteractionFnServiceRoleDefaultPolicy22A4F04C"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/submit_solutionFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "submitsolutionFnServiceRoleDefaultPolicy04A48D9B"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/get_realtime_tokenFn/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "getrealtimetokenFnServiceRoleDefaultPolicyC6793220"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/sync_userDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisyncuserDSServiceRoleDefaultPolicy3BC50BC3"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_mysteriesDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistmysteriesDSServiceRoleDefaultPolicy9B751F8B"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_mysteryDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetmysteryDSServiceRoleDefaultPolicyA0B020D6"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/start_gameDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApistartgameDSServiceRoleDefaultPolicy7BA958C0"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_game_sessionDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetgamesessionDSServiceRoleDefaultPolicy260E1762"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/list_game_sessionsDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApilistgamesessionsDSServiceRoleDefaultPolicy7D3C9834"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/record_interactionDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApirecordinteractionDSServiceRoleDefaultPolicyD1B669C3"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/submit_solutionDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApisubmitsolutionDSServiceRoleDefaultPolicyDC3345E2"
+    }
+  ],
+  "/CityMysteriesPipeline/CityMysteriesDev/BackendStack/Api/get_realtime_tokenDS/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApigetrealtimetokenDSServiceRoleDefaultPolicy047D334B"
+    }
+  ]
+}

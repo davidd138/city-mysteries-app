@@ -1,0 +1,185 @@
+{
+  "/CityMysteriesPipeline/Pipeline": [
+    {
+      "type": "aws:cdk:warning",
+      "data": "V1 pipeline type is implicitly selected when `pipelineType` is not set. If you want to use V2 type, set `PipelineType.V2`. [ack: @aws-cdk/aws-codepipeline:unspecifiedPipelineType]",
+      "trace": [
+        "Annotations.addMessage (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/annotations.js:1:2066)",
+        "Annotations.addWarningV2 (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/annotations.js:1:984)",
+        "CodePipeline.doBuildPipeline (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/pipelines/lib/codepipeline/codepipeline.js:1:6095)",
+        "CodePipeline.buildPipeline (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/pipelines/lib/main/pipeline-base.js:1:2730)",
+        "CodePipeline.buildJustInTime (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/pipelines/lib/main/pipeline-base.js:1:2797)",
+        "Object.visit (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/pipelines/lib/main/pipeline-base.js:1:1623)",
+        "recurse (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:4537)",
+        "recurse (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:4772)",
+        "recurse (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:4772)",
+        "invokeAspectsV2 (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:3163)",
+        "synthesize (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1895)",
+        "App.synth (/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/jsii-kernel-01VXEJ/node_modules/aws-cdk-lib/core/lib/stage.js:1:3138)",
+        "/private/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/tmp2oia8_c4/lib/program.js:3758:171",
+        "Kernel._Kernel_ensureSync (/private/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/tmp2oia8_c4/lib/program.js:4381:24)",
+        "Kernel.invoke (/private/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/tmp2oia8_c4/lib/program.js:3758:102)",
+        "KernelHost.processRequest (/private/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/tmp2oia8_c4/lib/program.js:17342:36)",
+        "KernelHost.run (/private/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/tmp2oia8_c4/lib/program.js:17302:22)",
+        "Immediate._onImmediate (/private/var/folders/mr/hvkk6dyn77127924hzxq8m140000gn/T/tmp2oia8_c4/lib/program.js:17303:45)",
+        "process.processImmediate (node:internal/timers:483:21)"
+      ]
+    }
+  ],
+  "/CityMysteriesPipeline/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    }
+  ],
+  "/CityMysteriesPipeline/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    }
+  ],
+  "/CityMysteriesPipeline/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "Pipeline9850B417"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/CodeBuildActionRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCodeBuildActionRole226DB0CB"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/ArtifactsBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineArtifactsBucketAEA9A052"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineRoleB27FAA37"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/CodeBuildActionRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCodeBuildActionRoleDefaultPolicy1D62A6FE"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/UpdatePipeline/SelfMutation/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineUpdatePipelineSelfMutationDAA41400"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Assets/FileRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineAssetsFileRole59943A77"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Assets/FileAsset1/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineAssetsFileAsset185A67CB4"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Assets/FileAsset2/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineAssetsFileAsset24D2D639B"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Assets/FileAsset3/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineAssetsFileAsset3FE71B523"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/ArtifactsBucket/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineArtifactsBucketPolicyF53CCC52"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Role/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineRoleDefaultPolicy7BDC1ABB"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/UpdatePipeline/SelfMutation/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineUpdatePipelineSelfMutationRole57E559E8"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Assets/FileRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineAssetsFileRoleDefaultPolicy14DB8755"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Source/davidd138_city-mysteries-app/CodePipelineActionRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineSourcedavidd138citymysteriesappCodePipelineActionRoleC7D566BC"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Build/Synth/CdkBuildProject/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineBuildSynthCdkBuildProject6BEFA8E6"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/CityMysteriesDev/DeployFrontend/DeployFrontend/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCityMysteriesDevDeployFrontend6EFA4CFA"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/UpdatePipeline/SelfMutation/Role/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineUpdatePipelineSelfMutationRoleDefaultPolicyA225DA4E"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Source/davidd138_city-mysteries-app/CodePipelineActionRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineSourcedavidd138citymysteriesappCodePipelineActionRoleDefaultPolicy41463617"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Build/Synth/CdkBuildProject/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineBuildSynthCdkBuildProjectRole231EEA2A"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/CityMysteriesDev/DeployFrontend/DeployFrontend/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCityMysteriesDevDeployFrontendRole0744FA8A"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/Build/Synth/CdkBuildProject/Role/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineBuildSynthCdkBuildProjectRoleDefaultPolicyFB6C941C"
+    }
+  ],
+  "/CityMysteriesPipeline/Pipeline/Pipeline/CityMysteriesDev/DeployFrontend/DeployFrontend/Role/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCityMysteriesDevDeployFrontendRoleDefaultPolicyBAE8F0FF"
+    }
+  ]
+}
