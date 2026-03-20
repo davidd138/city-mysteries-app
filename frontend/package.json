@@ -17,12 +17,13 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.52.0",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/mapbox-gl": "^3.4.0",
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "@playwright/test": "^1.52.0",
+    "serve": "^14.2.6",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.8.0"
   }
