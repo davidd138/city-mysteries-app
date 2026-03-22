@@ -40,6 +40,7 @@ export type Mystery = {
   characters: Character[] | null;
   solution: string;
   active: boolean;
+  briefing: string | null;
   imageUrl: string | null;
   createdAt: string | null;
 };

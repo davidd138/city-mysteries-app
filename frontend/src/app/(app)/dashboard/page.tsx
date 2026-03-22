@@ -3,10 +3,8 @@
 import { useEffect } from 'react';
 import { useQuery } from '@/hooks/useGraphQL';
 import { LIST_MYSTERIES } from '@/lib/graphql/queries';
-import { useMutation } from '@/hooks/useGraphQL';
-import { START_GAME } from '@/lib/graphql/mutations';
 import { useRouter } from 'next/navigation';
-import type { Mystery, GameSession } from '@/types';
+import type { Mystery } from '@/types';
 
 const difficultyConfig: Record<string, { label: string; color: string }> = {
   easy: { label: 'Principiante', color: 'text-teal-400' },
@@ -16,21 +14,9 @@ const difficultyConfig: Record<string, { label: string; color: string }> = {
 
 export default function DashboardPage() {
   const { data: mysteries, loading, execute: loadMysteries } = useQuery<Mystery[]>(LIST_MYSTERIES);
-  const { execute: startGame, loading: starting } = useMutation<GameSession>(START_GAME);
   const router = useRouter();
 
   useEffect(() => { loadMysteries(); }, [loadMysteries]);
-
-  const handleStartGame = async (mysteryId: string) => {
-    try {
-      const session = await startGame({ input: { mysteryId } });
-      if (session) {
-        router.push(`/play/?mysteryId=${mysteryId}&sessionId=${session.id}`);
-      }
-    } catch (e) {
-      console.error('Failed to start game:', e);
-    }
-  };
 
   return (
     <div className="animate-slide-up">
@@ -116,25 +102,14 @@ export default function DashboardPage() {
 
                 {/* Action button */}
                 <button
-                  onClick={() => handleStartGame(mystery.id)}
-                  disabled={starting}
+                  onClick={() => router.push(`/mystery/?id=${mystery.id}`)}
                   className="w-full py-3 rounded-lg btn-detective text-sm flex items-center justify-center gap-2"
                 >
-                  {starting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-midnight-950/30 border-t-midnight-950 rounded-full animate-spin" />
-                      Abriendo caso...
-                    </>
-                  ) : (
-                    <>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                        <polyline points="10 17 15 12 10 7" />
-                        <line x1="15" y1="12" x2="3" y2="12" />
-                      </svg>
-                      Investigar Caso
-                    </>
-                  )}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                  Ver Expediente
                 </button>
               </div>
             </div>

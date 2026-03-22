@@ -29,6 +29,7 @@ mystery = {
     "difficulty": "medium",
     "solution": "Lope de Vega",
     "active": True,
+    "briefing": "Agente, se ha abierto un caso de maxima prioridad. Miguel de Cervantes, el mas grande escritor de la lengua espanola, ha sido asesinado en circunstancias misteriosas. Las autoridades de la epoca no pudieron resolver el caso, pero ahora contamos con una ventaja: las estatuas de Madrid guardan la memoria de lo ocurrido. Cuatro figuras historicas de la capital — un pintor real, un artista atormentado, un rey melancolico y un navegante fanfarron — conocen fragmentos de la verdad. Pero cuidado: no todos diran la verdad. Interroga a cada uno, reune las pistas y presenta tu veredicto. El destino de la justicia esta en tus manos.",
     "imageUrl": None,
     "createdAt": "2026-03-20T00:00:00Z",
 }

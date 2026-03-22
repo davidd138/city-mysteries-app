@@ -40,6 +40,7 @@ type Mystery @aws_cognito_user_pools {
   characters: [Character!]
   solution: String!
   active: Boolean!
+  briefing: String
   imageUrl: String
   createdAt: String
 }

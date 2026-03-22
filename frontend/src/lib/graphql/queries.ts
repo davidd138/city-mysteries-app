@@ -3,7 +3,7 @@ export const LIST_MYSTERIES = /* GraphQL */ `
     listMysteries {
       id title description city location { lat lng } radius difficulty
       characters { characterId name historicalPeriod description statue { lat lng name } voice }
-      solution active imageUrl createdAt
+      solution active briefing imageUrl createdAt
     }
   }
 `;
@@ -13,7 +13,7 @@ export const GET_MYSTERY = /* GraphQL */ `
     getMystery(id: $id) {
       id title description city location { lat lng } radius difficulty
       characters { characterId mysteryId name historicalPeriod description statue { lat lng name } clues voice persona }
-      solution active imageUrl createdAt
+      solution active briefing imageUrl createdAt
     }
   }
 `;
