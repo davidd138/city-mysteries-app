@@ -1,7 +1,7 @@
 # City Mysteries App - Progress Tracker V2
 
-## Current Phase: PHASE 7
-## Current Step: 8.10
+## Current Phase: PHASE 9
+## Current Step: 9.1
 
 ## PHASE 6: Deploy to AWS & Wire Up Real Values ✅
 - [x] 6.1 Bootstrap CDK
@@ -33,7 +33,7 @@
 - [x] 8.7 Sound Effects & Ambient Audio (Web Audio API) — 18 E2E tests pass
 - [x] 8.8 Multi-city Support — Barcelona Mystery — 18 E2E tests pass
 - [x] 8.9 Achievement / Badge System (detective medals) — 18 E2E tests pass
-- [ ] 8.10 Progressive Web App (PWA)
+- [x] 8.10 Progressive Web App (PWA) — 18 E2E tests pass
 
 ## PHASE 9: Robustness & Polish
 - [ ] 9.1 Error boundaries & fallback UI
