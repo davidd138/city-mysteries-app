@@ -5,8 +5,23 @@ import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation } from '@/hooks/useGraphQL';
 import { GET_MYSTERY } from '@/lib/graphql/queries';
 import { SUBMIT_SOLUTION, USE_HINT } from '@/lib/graphql/mutations';
-import { GameMap } from '@/components/Map';
-import { CharacterModal } from '@/components/CharacterModal';
+import dynamic from 'next/dynamic';
+
+const GameMap = dynamic(() => import('@/components/Map').then(m => ({ default: m.GameMap })), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-midnight-900/50 rounded-xl">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-brass-500/30 border-t-brass-400 rounded-full animate-spin mx-auto mb-2" />
+        <p className="text-xs text-fog-500" style={{ fontFamily: 'var(--font-mono)' }}>Cargando mapa...</p>
+      </div>
+    </div>
+  ),
+});
+
+const CharacterModal = dynamic(() => import('@/components/CharacterModal').then(m => ({ default: m.CharacterModal })), {
+  ssr: false,
+});
 import type { Mystery, Character, GameResult, Hint } from '@/types';
 
 function PlayContent() {
