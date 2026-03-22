@@ -111,10 +111,10 @@ class BackendStack(cdk.Stack):
         )
 
         # ---- Secrets Manager ----
-        openai_secret = secretsmanager.Secret(
+        # Reference existing OpenAI secret (shared with sales-training-app)
+        openai_secret = secretsmanager.Secret.from_secret_name_v2(
             self, "OpenAISecret",
             secret_name=f"{env_name}/openai-api-key",
-            description="OpenAI API Key for Realtime voice sessions",
         )
 
         mapbox_secret = secretsmanager.Secret(
