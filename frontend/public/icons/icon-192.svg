@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#0a0e1a"/>
+  <circle cx="88" cy="80" r="36" fill="none" stroke="#c5a55a" stroke-width="6"/>
+  <line x1="114" y1="106" x2="148" y2="140" stroke="#c5a55a" stroke-width="8" stroke-linecap="round"/>
+  <text x="96" y="170" text-anchor="middle" fill="#c5a55a" font-family="Georgia, serif" font-size="16" font-weight="bold">CM</text>
+</svg>
