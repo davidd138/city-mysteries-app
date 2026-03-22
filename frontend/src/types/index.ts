@@ -64,6 +64,7 @@ export type GameSession = {
   startedAt: string;
   completedAt: string | null;
   solved: boolean | null;
+  hintsUsed: number | null;
 };
 
 export type GameSessionList = {
@@ -80,6 +81,11 @@ export type GameResult = {
 export type RealtimeToken = {
   token: string;
   expiresAt: number;
+};
+
+export type Hint = {
+  text: string;
+  hintsRemaining: number;
 };
 
 export type UserProfile = {

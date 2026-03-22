@@ -4,10 +4,10 @@ import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation } from '@/hooks/useGraphQL';
 import { GET_MYSTERY } from '@/lib/graphql/queries';
-import { SUBMIT_SOLUTION } from '@/lib/graphql/mutations';
+import { SUBMIT_SOLUTION, USE_HINT } from '@/lib/graphql/mutations';
 import { GameMap } from '@/components/Map';
 import { CharacterModal } from '@/components/CharacterModal';
-import type { Mystery, Character, GameResult } from '@/types';
+import type { Mystery, Character, GameResult, Hint } from '@/types';
 
 function PlayContent() {
   const searchParams = useSearchParams();
@@ -16,6 +16,7 @@ function PlayContent() {
 
   const { data: mystery, execute: loadMystery } = useQuery<Mystery>(GET_MYSTERY);
   const { execute: submitSolution, loading: submitting } = useMutation<GameResult>(SUBMIT_SOLUTION);
+  const { execute: requestHint, loading: hintLoading } = useMutation<Hint>(USE_HINT);
 
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
   const [visitedCharacters, setVisitedCharacters] = useState<Set<string>>(new Set());
@@ -23,6 +24,9 @@ function PlayContent() {
   const [showSolutionModal, setShowSolutionModal] = useState(false);
   const [solution, setSolution] = useState('');
   const [result, setResult] = useState<GameResult | null>(null);
+  const [currentHint, setCurrentHint] = useState<Hint | null>(null);
+  const [showHint, setShowHint] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
 
   useEffect(() => {
     if (mysteryId) loadMystery({ id: mysteryId });
@@ -69,6 +73,34 @@ function PlayContent() {
             {mystery.city} — {mystery.characters?.length || 0} sospechosos
           </p>
         </div>
+        <div className="flex items-center gap-3">
+          {/* Hint button */}
+          <button
+            onClick={async () => {
+              if (hintsUsed >= 3 || hintLoading || !!result) return;
+              try {
+                const hint = await requestHint({ sessionId });
+                if (hint) {
+                  setCurrentHint(hint);
+                  setShowHint(true);
+                  setHintsUsed(3 - hint.hintsRemaining);
+                }
+              } catch (e) {
+                console.error('Hint failed:', e);
+              }
+            }}
+            disabled={hintsUsed >= 3 || hintLoading || !!result}
+            className="px-4 py-2.5 rounded-lg bg-midnight-800 border border-midnight-700/50 text-fog-400 hover:text-brass-400 hover:border-brass-600/30 transition-all text-sm flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            title={`${3 - hintsUsed} pistas restantes`}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            {hintsUsed}/3
+          </button>
+
         <button
           onClick={() => setShowSolutionModal(true)}
           disabled={!!result}
@@ -100,6 +132,7 @@ function PlayContent() {
             </>
           )}
         </button>
+        </div>
       </div>
 
       {/* Map + Gallery */}
@@ -189,6 +222,38 @@ function PlayContent() {
           mysteryTitle={mystery.title}
           onClose={() => setSelectedCharacter(null)}
         />
+      )}
+
+      {/* Hint Modal */}
+      {showHint && currentHint && (
+        <div className="fixed inset-0 bg-midnight-950/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="card-case-file rounded-xl w-full max-w-sm p-6 animate-card-reveal">
+            <div className="flex items-center gap-2 mb-4">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-brass-400">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <h3 className="text-base font-bold text-parchment" style={{ fontFamily: 'var(--font-serif)' }}>
+                Nota Misteriosa
+              </h3>
+            </div>
+            <div className="bg-midnight-900/60 border border-midnight-700/50 rounded-lg p-4 mb-4">
+              <p className="text-sm text-fog-300 italic leading-relaxed" style={{ fontFamily: 'var(--font-serif)' }}>
+                &ldquo;{currentHint.text}&rdquo;
+              </p>
+            </div>
+            <p className="text-xs text-fog-600 mb-4" style={{ fontFamily: 'var(--font-mono)' }}>
+              Pistas restantes: {currentHint.hintsRemaining}
+            </p>
+            <button
+              onClick={() => setShowHint(false)}
+              className="w-full py-2.5 bg-midnight-800 text-fog-400 rounded-lg hover:bg-midnight-700 transition-colors text-sm"
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Solution Modal */}

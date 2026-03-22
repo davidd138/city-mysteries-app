@@ -315,6 +315,13 @@ class BackendStack(cdk.Stack):
         )
         openai_secret.grant_read(token_fn)
 
+        # useHint
+        create_resolver(
+            "use_hint", "Mutation", "useHint",
+            read_tables=["mysteries", "characters", "interactions", "users"],
+            write_tables=["game_sessions"],
+        )
+
         # getUserProfile
         create_resolver(
             "get_user_profile", "Query", "getUserProfile",

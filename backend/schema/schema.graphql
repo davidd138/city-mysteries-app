@@ -64,6 +64,7 @@ type GameSession @aws_cognito_user_pools {
   startedAt: String!
   completedAt: String
   solved: Boolean
+  hintsUsed: Int
 }
 
 type GameSessionList @aws_cognito_user_pools {
@@ -117,9 +118,15 @@ type Query {
   getUserProfile: UserProfile! @aws_cognito_user_pools
 }
 
+type Hint @aws_cognito_user_pools {
+  text: String!
+  hintsRemaining: Int!
+}
+
 type Mutation {
   syncUser: User! @aws_cognito_user_pools
   startGame(input: StartGameInput!): GameSession! @aws_cognito_user_pools
   recordInteraction(input: RecordInteractionInput!): Interaction! @aws_cognito_user_pools
   submitSolution(input: SubmitSolutionInput!): GameResult! @aws_cognito_user_pools
+  useHint(sessionId: String!): Hint! @aws_cognito_user_pools
 }

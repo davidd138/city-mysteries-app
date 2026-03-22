@@ -20,6 +20,14 @@ export const RECORD_INTERACTION = /* GraphQL */ `
   }
 `;
 
+export const USE_HINT = /* GraphQL */ `
+  mutation UseHint($sessionId: String!) {
+    useHint(sessionId: $sessionId) {
+      text hintsRemaining
+    }
+  }
+`;
+
 export const SUBMIT_SOLUTION = /* GraphQL */ `
   mutation SubmitSolution($input: SubmitSolutionInput!) {
     submitSolution(input: $input) {
