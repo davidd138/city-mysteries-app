@@ -110,6 +110,15 @@ class BackendStack(cdk.Stack):
             removal_policy=cdk.RemovalPolicy.DESTROY,
         )
 
+        achievements_table = dynamodb.Table(
+            self, "AchievementsTable",
+            table_name=f"{env_name}-cm-achievements",
+            partition_key=dynamodb.Attribute(name="userId", type=dynamodb.AttributeType.STRING),
+            sort_key=dynamodb.Attribute(name="achievementId", type=dynamodb.AttributeType.STRING),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
+        )
+
         # ---- Secrets Manager ----
         # Reference existing OpenAI secret (shared with sales-training-app)
         openai_secret = secretsmanager.Secret.from_secret_name_v2(
@@ -197,6 +206,7 @@ class BackendStack(cdk.Stack):
             "CHARACTERS_TABLE": characters_table.table_name,
             "GAME_SESSIONS_TABLE": game_sessions_table.table_name,
             "INTERACTIONS_TABLE": interactions_table.table_name,
+            "ACHIEVEMENTS_TABLE": achievements_table.table_name,
             "ENV_NAME": env_name,
         }
 
@@ -206,6 +216,7 @@ class BackendStack(cdk.Stack):
             "characters": characters_table,
             "game_sessions": game_sessions_table,
             "interactions": interactions_table,
+            "achievements": achievements_table,
         }
 
         # ---- Helper to create Lambda + AppSync resolver ----
@@ -332,6 +343,13 @@ class BackendStack(cdk.Stack):
         create_resolver(
             "get_leaderboard", "Query", "getLeaderboard",
             read_tables=["users", "game_sessions", "mysteries"],
+        )
+
+        # getAchievements
+        create_resolver(
+            "get_achievements", "Query", "getAchievements",
+            read_tables=["users", "game_sessions", "achievements"],
+            write_tables=["achievements"],
         )
 
         # ---- Exports ----

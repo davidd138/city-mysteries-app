@@ -2,13 +2,14 @@
 
 import { useEffect } from 'react';
 import { useQuery } from '@/hooks/useGraphQL';
-import { GET_USER_PROFILE } from '@/lib/graphql/queries';
-import type { UserProfile } from '@/types';
+import { GET_USER_PROFILE, GET_ACHIEVEMENTS } from '@/lib/graphql/queries';
+import type { UserProfile, Achievement } from '@/types';
 
 export default function ProfilePage() {
   const { data: profile, loading, execute: loadProfile } = useQuery<UserProfile>(GET_USER_PROFILE);
+  const { data: achievements, execute: loadAchievements } = useQuery<Achievement[]>(GET_ACHIEVEMENTS);
 
-  useEffect(() => { loadProfile(); }, [loadProfile]);
+  useEffect(() => { loadProfile(); loadAchievements(); }, [loadProfile, loadAchievements]);
 
   return (
     <div className="animate-slide-up max-w-2xl mx-auto">
@@ -17,7 +18,7 @@ export default function ProfilePage() {
         <h2 className="text-2xl font-bold text-parchment" style={{ fontFamily: 'var(--font-serif)' }}>
           Credencial de Agente
         </h2>
-        <p className="text-sm text-fog-500 mt-1">Tu identificacion y estadisticas de casos</p>
+        <p className="text-sm text-fog-500 mt-1">Tu identificacion, estadisticas e insignias</p>
       </div>
 
       {loading && (
@@ -34,15 +35,12 @@ export default function ProfilePage() {
             <div className="h-1.5 bg-gradient-to-r from-brass-500 via-brass-400 to-brass-600" />
             <div className="p-6">
               <div className="flex items-start gap-6">
-                {/* Avatar */}
                 <div className="w-20 h-20 rounded-xl bg-midnight-700/50 border-2 border-brass-600/30 flex items-center justify-center flex-shrink-0">
                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-brass-500/60">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                   </svg>
                 </div>
-
-                {/* Info */}
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
@@ -71,22 +69,9 @@ export default function ProfilePage() {
 
           {/* Statistics */}
           <div className="grid grid-cols-3 gap-4">
-            <StatCard
-              label="Casos Totales"
-              value={profile.totalGames}
-              icon="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-            />
-            <StatCard
-              label="Casos Resueltos"
-              value={profile.gamesSolved}
-              icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              highlight
-            />
-            <StatCard
-              label="Tasa de Exito"
-              value={`${profile.successRate}%`}
-              icon="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-            />
+            <StatCard label="Casos Totales" value={profile.totalGames} icon="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <StatCard label="Casos Resueltos" value={profile.gamesSolved} icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" highlight />
+            <StatCard label="Tasa de Exito" value={`${profile.successRate}%`} icon="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </div>
 
           {/* Rank */}
@@ -107,6 +92,53 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+
+          {/* Achievements / Badges */}
+          {achievements && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-brass-500">
+                  <circle cx="12" cy="8" r="7" />
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                </svg>
+                <span className="text-xs text-fog-500 tracking-widest uppercase" style={{ fontFamily: 'var(--font-mono)' }}>
+                  Insignias ({achievements.filter(a => a.unlocked).length}/{achievements.length})
+                </span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {achievements.map((ach) => (
+                  <div
+                    key={ach.achievementId}
+                    className={`card-case-file rounded-xl p-4 text-center transition-all ${
+                      ach.unlocked ? '' : 'opacity-40 grayscale'
+                    }`}
+                  >
+                    <div className={`w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center border-2 ${
+                      ach.unlocked
+                        ? 'border-brass-400/40 bg-brass-700/15'
+                        : 'border-midnight-600 bg-midnight-800'
+                    }`}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
+                        className={ach.unlocked ? 'text-brass-400' : 'text-fog-600'}>
+                        <circle cx="12" cy="8" r="7" />
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                      </svg>
+                    </div>
+                    <p className={`text-xs font-medium mb-0.5 ${ach.unlocked ? 'text-parchment-dark' : 'text-fog-600'}`}
+                      style={{ fontFamily: 'var(--font-serif)' }}>
+                      {ach.name}
+                    </p>
+                    <p className="text-[10px] text-fog-600 leading-tight">{ach.description}</p>
+                    {ach.unlocked && ach.unlockedAt && (
+                      <p className="text-[9px] text-teal-500 mt-1" style={{ fontFamily: 'var(--font-mono)' }}>
+                        {new Date(ach.unlockedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

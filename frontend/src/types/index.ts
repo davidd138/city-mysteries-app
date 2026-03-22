@@ -109,4 +109,12 @@ export type UserProfile = {
   memberSince: string | null;
 };
 
+export type Achievement = {
+  achievementId: string;
+  name: string;
+  description: string;
+  unlockedAt: string | null;
+  unlocked: boolean;
+};
+
 export type TrainingState = 'idle' | 'connecting' | 'connected' | 'listening' | 'speaking' | 'error';

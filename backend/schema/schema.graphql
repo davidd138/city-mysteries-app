@@ -119,6 +119,15 @@ type Query {
   getRealtimeToken(characterId: String!, mysteryId: String!): RealtimeToken! @aws_cognito_user_pools
   getUserProfile: UserProfile! @aws_cognito_user_pools
   getLeaderboard: [LeaderboardEntry!]! @aws_cognito_user_pools
+  getAchievements: [Achievement!]! @aws_cognito_user_pools
+}
+
+type Achievement @aws_cognito_user_pools {
+  achievementId: String!
+  name: String!
+  description: String!
+  unlockedAt: String
+  unlocked: Boolean!
 }
 
 type LeaderboardEntry @aws_cognito_user_pools {

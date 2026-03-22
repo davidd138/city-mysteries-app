@@ -53,6 +53,14 @@ export const GET_USER_PROFILE = /* GraphQL */ `
   }
 `;
 
+export const GET_ACHIEVEMENTS = /* GraphQL */ `
+  query GetAchievements {
+    getAchievements {
+      achievementId name description unlockedAt unlocked
+    }
+  }
+`;
+
 export const GET_REALTIME_TOKEN = /* GraphQL */ `
   query GetRealtimeToken($characterId: String!, $mysteryId: String!) {
     getRealtimeToken(characterId: $characterId, mysteryId: $mysteryId) {
