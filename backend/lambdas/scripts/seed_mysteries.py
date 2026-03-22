@@ -8,6 +8,7 @@ Requires the tables to be deployed first (via CDK).
 
 import boto3
 import uuid
+from decimal import Decimal
 
 ENV = "dev"
 REGION = "eu-west-1"
@@ -23,7 +24,7 @@ mystery = {
     "title": "Quien asesino a Cervantes?",
     "description": "Alguien ha asesinado a Miguel de Cervantes y las estatuas de Madrid guardan el secreto. Habla con cada una de ellas para descubrir al culpable. Cada personaje conoce una parte de la verdad.",
     "city": "Madrid",
-    "location": {"lat": 40.4168, "lng": -3.7038},
+    "location": {"lat": Decimal("40.4168"), "lng": Decimal("-3.7038")},
     "radius": 3000,
     "difficulty": "medium",
     "solution": "Lope de Vega",
@@ -39,7 +40,7 @@ characters = [
         "name": "Diego Velazquez",
         "historicalPeriod": "Siglo de Oro (1599-1660)",
         "description": "El pintor mas importante de la corte espanola. Su estatua se alza frente al Museo del Prado, paleta en mano, observando eternamente a los que pasan.",
-        "statue": {"lat": 40.4145, "lng": -3.6946, "name": "Estatua de Velazquez, Museo del Prado"},
+        "statue": {"lat": Decimal("40.4145"), "lng": Decimal("-3.6946"), "name": "Estatua de Velazquez, Museo del Prado"},
         "clues": [
             "El arma del crimen fue una pluma envenenada, no una espada.",
             "El asesino era un escritor, no un noble ni un soldado.",
@@ -54,7 +55,7 @@ characters = [
         "name": "Francisco de Goya",
         "historicalPeriod": "Ilustracion y Romanticismo (1746-1828)",
         "description": "El pintor de los horrores y las verdades oscuras de Espana. Su estatua vigila la entrada del Prado, con mirada tormentosa.",
-        "statue": {"lat": 40.4141, "lng": -3.6927, "name": "Estatua de Goya, Puerta del Prado"},
+        "statue": {"lat": Decimal("40.4141"), "lng": Decimal("-3.6927"), "name": "Estatua de Goya, Puerta del Prado"},
         "clues": [
             "El motivo del crimen fue la envidia literaria, no el dinero ni el poder.",
             "El asesino competia con Cervantes por la fama y el reconocimiento del publico.",
@@ -69,7 +70,7 @@ characters = [
         "name": "Felipe IV",
         "historicalPeriod": "Casa de Austria (1605-1665)",
         "description": "El Rey Planeta, mecenas de las artes y rey de un imperio en declive. Su estatua ecuestre domina la Plaza de Oriente frente al Palacio Real.",
-        "statue": {"lat": 40.4180, "lng": -3.7138, "name": "Estatua ecuestre de Felipe IV, Plaza de Oriente"},
+        "statue": {"lat": Decimal("40.4180"), "lng": Decimal("-3.7138"), "name": "Estatua ecuestre de Felipe IV, Plaza de Oriente"},
         "clues": [
             "El crimen ocurrio en el barrio de las Letras, cerca de la casa del asesino.",
             "El asesino vivia a pocos metros de Cervantes, en la misma calle.",
@@ -84,7 +85,7 @@ characters = [
         "name": "Cristobal Colon",
         "historicalPeriod": "Era de los Descubrimientos (1451-1506)",
         "description": "El navegante que llego a America. Su imponente monumento en la Plaza de Colon senala hacia el oeste, hacia el Nuevo Mundo.",
-        "statue": {"lat": 40.4256, "lng": -3.6901, "name": "Monumento a Colon, Plaza de Colon"},
+        "statue": {"lat": Decimal("40.4256"), "lng": Decimal("-3.6901"), "name": "Monumento a Colon, Plaza de Colon"},
         "clues": [
             "PISTA FALSA: El asesino vino de las Americas en un galeon.",
             "PISTA FALSA: El crimen fue encargado por la corona portuguesa.",
