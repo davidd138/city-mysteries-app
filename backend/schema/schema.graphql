@@ -65,6 +65,8 @@ type GameSession @aws_cognito_user_pools {
   completedAt: String
   solved: Boolean
   hintsUsed: Int
+  score: Int
+  elapsedSeconds: Int
 }
 
 type GameSessionList @aws_cognito_user_pools {

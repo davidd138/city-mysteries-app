@@ -65,6 +65,8 @@ export type GameSession = {
   completedAt: string | null;
   solved: boolean | null;
   hintsUsed: number | null;
+  score: number | null;
+  elapsedSeconds: number | null;
 };
 
 export type GameSessionList = {

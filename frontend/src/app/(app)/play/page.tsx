@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback, Suspense } from 'react';
+import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery, useMutation } from '@/hooks/useGraphQL';
 import { GET_MYSTERY } from '@/lib/graphql/queries';
@@ -27,6 +27,20 @@ function PlayContent() {
   const [currentHint, setCurrentHint] = useState<Hint | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Timer
+  useEffect(() => {
+    if (result) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+    timerRef.current = setInterval(() => {
+      setElapsedSeconds(s => s + 1);
+    }, 1000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [result]);
 
   useEffect(() => {
     if (mysteryId) loadMystery({ id: mysteryId });
@@ -74,6 +88,17 @@ function PlayContent() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {/* Timer */}
+          <div className="px-3 py-2 bg-midnight-800/60 border border-midnight-700/30 rounded-lg flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-fog-500">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span className="text-sm text-fog-400 tabular-nums" style={{ fontFamily: 'var(--font-mono)', minWidth: '48px' }}>
+              {String(Math.floor(elapsedSeconds / 60)).padStart(2, '0')}:{String(elapsedSeconds % 60).padStart(2, '0')}
+            </span>
+          </div>
+
           {/* Hint button */}
           <button
             onClick={async () => {
@@ -320,7 +345,25 @@ function PlayContent() {
               style={{ fontFamily: 'var(--font-serif)' }}>
               {result.correct ? 'Caso Resuelto' : 'Veredicto Incorrecto'}
             </h3>
-            <p className="text-sm text-fog-400 mb-6 leading-relaxed">{result.message}</p>
+            <p className="text-sm text-fog-400 mb-4 leading-relaxed">{result.message}</p>
+            {result.correct && result.session?.score && (
+              <div className="flex items-center justify-center gap-6 mb-6 p-3 bg-midnight-800/50 rounded-lg">
+                <div className="text-center">
+                  <div className="text-xl font-bold text-brass-400" style={{ fontFamily: 'var(--font-serif)' }}>
+                    {result.session.score}
+                  </div>
+                  <span className="text-[9px] text-fog-600 uppercase tracking-wider" style={{ fontFamily: 'var(--font-mono)' }}>Puntos</span>
+                </div>
+                {result.session.elapsedSeconds != null && (
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-fog-300" style={{ fontFamily: 'var(--font-serif)' }}>
+                      {Math.floor(result.session.elapsedSeconds / 60)}:{String(result.session.elapsedSeconds % 60).padStart(2, '0')}
+                    </div>
+                    <span className="text-[9px] text-fog-600 uppercase tracking-wider" style={{ fontFamily: 'var(--font-mono)' }}>Tiempo</span>
+                  </div>
+                )}
+              </div>
+            )}
             <button
               onClick={() => setShowSolutionModal(false)}
               className="px-8 py-2.5 bg-midnight-800 text-fog-400 rounded-lg hover:bg-midnight-700 transition-colors text-sm"

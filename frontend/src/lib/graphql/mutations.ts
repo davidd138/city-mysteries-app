@@ -32,7 +32,7 @@ export const SUBMIT_SOLUTION = /* GraphQL */ `
   mutation SubmitSolution($input: SubmitSolutionInput!) {
     submitSolution(input: $input) {
       correct message
-      session { id mysteryId status completedAt solved }
+      session { id mysteryId status completedAt solved score elapsedSeconds }
     }
   }
 `;

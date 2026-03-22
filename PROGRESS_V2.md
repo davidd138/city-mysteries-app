@@ -1,7 +1,7 @@
 # City Mysteries App - Progress Tracker V2
 
 ## Current Phase: PHASE 7
-## Current Step: 8.4
+## Current Step: 8.5
 
 ## PHASE 6: Deploy to AWS & Wire Up Real Values ✅
 - [x] 6.1 Bootstrap CDK
@@ -27,7 +27,7 @@
 - [x] 8.1 User Profile Page (detective ID card) — 15 E2E tests pass
 - [x] 8.2 Mystery Detail Page (case briefing dossier) — 18 E2E tests pass
 - [x] 8.3 Character Gallery During Play (polaroid cards) — 18 E2E tests pass
-- [ ] 8.4 Hint System (mysterious notes)
+- [x] 8.4 Hint System (mysterious notes) — 18 E2E tests pass
 - [ ] 8.5 Game Timer & Score System (vintage clock)
 - [ ] 8.6 Leaderboard (Hall of Fame)
 - [ ] 8.7 Sound Effects & Ambient Audio (Web Audio API)
