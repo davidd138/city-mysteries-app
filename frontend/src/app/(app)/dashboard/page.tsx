@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useQuery } from '@/hooks/useGraphQL';
 import { LIST_MYSTERIES } from '@/lib/graphql/queries';
 import { useRouter } from 'next/navigation';
+import { CardSkeleton } from '@/components/Skeleton';
 import type { Mystery } from '@/types';
 
 const difficultyConfig: Record<string, { label: string; color: string }> = {
@@ -28,11 +29,10 @@ export default function DashboardPage() {
         <p className="text-sm text-fog-500 mt-1">Selecciona un misterio para comenzar la investigacion</p>
       </div>
 
-      {/* Loading */}
+      {/* Loading skeletons */}
       {loading && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4">
-          <div className="w-10 h-10 border-2 border-brass-500/30 border-t-brass-400 rounded-full animate-spin" />
-          <p className="text-sm text-fog-500" style={{ fontFamily: 'var(--font-mono)' }}>Consultando archivos...</p>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3].map(i => <CardSkeleton key={i} />)}
         </div>
       )}
 

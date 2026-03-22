@@ -1,7 +1,7 @@
 # City Mysteries App - Progress Tracker V2
 
 ## Current Phase: PHASE 9
-## Current Step: 9.1
+## Current Step: 9.2
 
 ## PHASE 6: Deploy to AWS & Wire Up Real Values ✅
 - [x] 6.1 Bootstrap CDK
@@ -36,7 +36,7 @@
 - [x] 8.10 Progressive Web App (PWA) — 18 E2E tests pass
 
 ## PHASE 9: Robustness & Polish
-- [ ] 9.1 Error boundaries & fallback UI
+- [x] 9.1 Error boundaries & fallback UI — 18 E2E tests pass
 - [ ] 9.2 Loading states & skeletons
 - [ ] 9.3 Mobile responsiveness
 - [ ] 9.4 Accessibility audit

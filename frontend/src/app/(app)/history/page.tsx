@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@/hooks/useGraphQL';
 import { LIST_GAME_SESSIONS } from '@/lib/graphql/queries';
+import { ListSkeleton } from '@/components/Skeleton';
 import type { GameSessionList } from '@/types';
 
 const statusConfig: Record<string, { label: string; stampClass: string; icon: string }> = {
@@ -40,13 +41,8 @@ export default function HistoryPage() {
         <p className="text-sm text-fog-500 mt-1">Registro de investigaciones anteriores</p>
       </div>
 
-      {/* Loading */}
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-16 gap-4">
-          <div className="w-10 h-10 border-2 border-brass-500/30 border-t-brass-400 rounded-full animate-spin" />
-          <p className="text-sm text-fog-500" style={{ fontFamily: 'var(--font-mono)' }}>Revisando archivos...</p>
-        </div>
-      )}
+      {/* Loading skeletons */}
+      {loading && <ListSkeleton rows={4} />}
 
       {/* Empty */}
       {!loading && sessions.length === 0 && (
