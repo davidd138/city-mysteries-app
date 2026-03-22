@@ -1,14 +1,14 @@
 # City Mysteries App - Progress Tracker V2
 
 ## Current Phase: PHASE 6
-## Current Step: 6.3
+## Current Step: 6.6
 
 ## PHASE 6: Deploy to AWS & Wire Up Real Values
 - [x] 6.1 Bootstrap CDK
 - [x] 6.2 Deploy pipeline stack
-- [ ] 6.3 Trigger pipeline and wait for success
-- [ ] 6.4 Get real CloudFormation outputs, update amplify-config.ts
-- [ ] 6.5 Rebuild and redeploy frontend with real values
+- [x] 6.3 Trigger pipeline and wait for success
+- [x] 6.4 Get real CloudFormation outputs, update amplify-config.ts
+- [x] 6.5 Rebuild and redeploy frontend with real values
 - [ ] 6.6 Seed DynamoDB with mystery data
 - [ ] 6.7 Verify deployed site (curl 200, login page renders)
 
