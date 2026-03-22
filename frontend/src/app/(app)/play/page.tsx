@@ -18,6 +18,8 @@ function PlayContent() {
   const { execute: submitSolution, loading: submitting } = useMutation<GameResult>(SUBMIT_SOLUTION);
 
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [visitedCharacters, setVisitedCharacters] = useState<Set<string>>(new Set());
+  const [showGallery, setShowGallery] = useState(false);
   const [showSolutionModal, setShowSolutionModal] = useState(false);
   const [solution, setSolution] = useState('');
   const [result, setResult] = useState<GameResult | null>(null);
@@ -28,6 +30,7 @@ function PlayContent() {
 
   const handleCharacterClick = useCallback((character: Character) => {
     setSelectedCharacter(character);
+    setVisitedCharacters(prev => new Set(prev).add(character.characterId));
   }, []);
 
   const handleSubmitSolution = async (e: React.FormEvent) => {
@@ -99,13 +102,84 @@ function PlayContent() {
         </button>
       </div>
 
-      {/* Map */}
-      <div className="flex-1 rounded-xl overflow-hidden border-aged">
-        <GameMap
-          center={mystery.location}
-          characters={mystery.characters || []}
-          onCharacterClick={handleCharacterClick}
-        />
+      {/* Map + Gallery */}
+      <div className="flex-1 flex gap-4 min-h-0">
+        {/* Map */}
+        <div className="flex-1 rounded-xl overflow-hidden border-aged">
+          <GameMap
+            center={mystery.location}
+            characters={mystery.characters || []}
+            onCharacterClick={handleCharacterClick}
+          />
+        </div>
+
+        {/* Character Gallery Panel */}
+        <div className={`transition-all duration-300 ${showGallery ? 'w-64' : 'w-10'} flex-shrink-0`}>
+          {/* Toggle button */}
+          <button
+            onClick={() => setShowGallery(!showGallery)}
+            className="w-10 h-10 rounded-lg card-case-file flex items-center justify-center mb-2"
+            title={showGallery ? 'Ocultar galeria' : 'Ver sospechosos'}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-brass-400">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </button>
+
+          {showGallery && (
+            <div className="card-case-file rounded-xl p-3 h-[calc(100%-48px)] overflow-y-auto animate-slide-up">
+              <span className="text-[9px] text-fog-600 tracking-widest uppercase block mb-3" style={{ fontFamily: 'var(--font-mono)' }}>
+                Sospechosos ({visitedCharacters.size}/{mystery.characters?.length || 0})
+              </span>
+              <div className="space-y-2">
+                {mystery.characters?.map((char) => {
+                  const visited = visitedCharacters.has(char.characterId);
+                  return (
+                    <button
+                      key={char.characterId}
+                      onClick={() => visited ? handleCharacterClick(char) : undefined}
+                      className={`w-full text-left p-2.5 rounded-lg transition-all ${
+                        visited
+                          ? 'bg-brass-700/10 border border-brass-600/15 cursor-pointer hover:bg-brass-700/20'
+                          : 'bg-midnight-800/50 border border-midnight-700/30 cursor-default'
+                      }`}
+                    >
+                      {/* Polaroid-style card */}
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-8 h-8 rounded flex items-center justify-center flex-shrink-0 ${
+                          visited ? 'bg-brass-700/20 border border-brass-600/20' : 'bg-midnight-700/30 border border-midnight-600/20'
+                        }`}>
+                          {visited ? (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-brass-400">
+                              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                              <circle cx="12" cy="7" r="4" />
+                            </svg>
+                          ) : (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-fog-600">
+                              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className={`text-xs font-medium truncate ${visited ? 'text-parchment-dark' : 'text-fog-600'}`}>
+                            {visited ? char.name : '???'}
+                          </p>
+                          <p className="text-[10px] text-fog-600 truncate">
+                            {visited ? char.historicalPeriod : 'Sin identificar'}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Character Modal */}
