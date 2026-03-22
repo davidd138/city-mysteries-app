@@ -70,6 +70,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="agente@citymysteries.com"
+              aria-label="Email de identificacion"
               className="w-full px-4 py-2.5 rounded-lg input-noir text-sm"
             />
           </div>
@@ -83,6 +84,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
+              aria-label="Clave de acceso"
               className="w-full px-4 py-2.5 rounded-lg input-noir text-sm"
             />
           </div>

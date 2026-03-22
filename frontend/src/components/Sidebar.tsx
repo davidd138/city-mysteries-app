@@ -76,7 +76,7 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-midnight-900/95 border-t border-midnight-700/50 backdrop-blur-md safe-area-inset-bottom">
+      <nav aria-label="Navegacion principal movil" className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-midnight-900/95 border-t border-midnight-700/50 backdrop-blur-md safe-area-inset-bottom">
         <div className="flex items-center justify-around px-2 py-2">
           {navItems.map((item) => {
             const isActive = pathname?.startsWith(item.href.replace(/\/$/, ''));
