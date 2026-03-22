@@ -118,6 +118,16 @@ type Query {
   listGameSessions(limit: Int, nextToken: String): GameSessionList! @aws_cognito_user_pools
   getRealtimeToken(characterId: String!, mysteryId: String!): RealtimeToken! @aws_cognito_user_pools
   getUserProfile: UserProfile! @aws_cognito_user_pools
+  getLeaderboard: [LeaderboardEntry!]! @aws_cognito_user_pools
+}
+
+type LeaderboardEntry @aws_cognito_user_pools {
+  rank: Int!
+  userId: String!
+  name: String
+  bestScore: Int!
+  mysteryTitle: String
+  elapsedSeconds: Int
 }
 
 type Hint @aws_cognito_user_pools {

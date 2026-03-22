@@ -37,6 +37,14 @@ export const LIST_GAME_SESSIONS = /* GraphQL */ `
   }
 `;
 
+export const GET_LEADERBOARD = /* GraphQL */ `
+  query GetLeaderboard {
+    getLeaderboard {
+      rank userId name bestScore mysteryTitle elapsedSeconds
+    }
+  }
+`;
+
 export const GET_USER_PROFILE = /* GraphQL */ `
   query GetUserProfile {
     getUserProfile {

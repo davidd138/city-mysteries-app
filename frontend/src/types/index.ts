@@ -85,6 +85,15 @@ export type RealtimeToken = {
   expiresAt: number;
 };
 
+export type LeaderboardEntry = {
+  rank: number;
+  userId: string;
+  name: string | null;
+  bestScore: number;
+  mysteryTitle: string | null;
+  elapsedSeconds: number | null;
+};
+
 export type Hint = {
   text: string;
   hintsRemaining: number;

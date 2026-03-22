@@ -328,6 +328,12 @@ class BackendStack(cdk.Stack):
             read_tables=["users", "game_sessions"],
         )
 
+        # getLeaderboard
+        create_resolver(
+            "get_leaderboard", "Query", "getLeaderboard",
+            read_tables=["users", "game_sessions", "mysteries"],
+        )
+
         # ---- Exports ----
         self.graphql_url = api.graphql_url
         self.user_pool_id = user_pool.user_pool_id
