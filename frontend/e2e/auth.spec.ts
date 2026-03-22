@@ -6,7 +6,7 @@ test.describe('Auth Pages', () => {
     await page.click('a[href="/register/"]');
     await page.waitForURL(/\/register/);
     await expect(page).toHaveURL(/\/register/);
-    await expect(page.locator('h1')).toContainText('City Mysteries');
+    await expect(page.locator('h1')).toContainText('Nuevo Agente');
   });
 
   test('can navigate from register to login', async ({ page }) => {
@@ -25,7 +25,7 @@ test.describe('Auth Pages', () => {
 
   test('register page has create account button', async ({ page }) => {
     await page.goto('/register/');
-    await expect(page.locator('button[type="submit"]')).toContainText('Crear cuenta');
+    await expect(page.locator('button[type="submit"]')).toContainText('Solicitar Acceso');
   });
 
   test('login form requires email', async ({ page }) => {

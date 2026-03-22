@@ -22,13 +22,13 @@ test.describe('Smoke Tests', () => {
   test('login page has submit button', async ({ page }) => {
     await page.goto('/login/');
     await expect(page.locator('button[type="submit"]')).toBeVisible();
-    await expect(page.locator('button[type="submit"]')).toContainText('Entrar');
+    await expect(page.locator('button[type="submit"]')).toContainText('Acceder al Caso');
   });
 
   test('login page has link to register', async ({ page }) => {
     await page.goto('/login/');
     const registerLink = page.locator('a[href="/register/"]');
     await expect(registerLink).toBeVisible();
-    await expect(registerLink).toContainText('Registrate');
+    await expect(registerLink).toContainText('Solicitar acceso');
   });
 });

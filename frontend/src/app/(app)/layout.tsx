@@ -10,7 +10,7 @@ configureAmplify();
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthGuard>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen texture-parchment">
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <Topbar />

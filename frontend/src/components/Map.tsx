@@ -32,7 +32,6 @@ export function GameMap({ center, characters, onCharacterClick }: MapProps) {
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Add user location
     map.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
@@ -55,31 +54,55 @@ export function GameMap({ center, characters, onCharacterClick }: MapProps) {
     const map = mapRef.current;
     if (!map) return;
 
-    // Remove existing markers
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
     characters.forEach((char) => {
       const el = document.createElement('div');
-      el.className = 'character-marker';
+      el.className = 'character-marker marker-glow';
       el.style.cssText = `
-        width: 36px; height: 36px; border-radius: 50%;
-        background: #78350f; border: 3px solid #fbbf24;
+        width: 40px; height: 40px; border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #c5a55a, #6b5a3e);
+        border: 2px solid rgba(197, 165, 90, 0.6);
         cursor: pointer; display: flex; align-items: center;
-        justify-content: center; font-size: 18px;
-        box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
-        transition: transform 0.2s;
+        justify-content: center; font-size: 14px;
+        box-shadow: 0 0 20px rgba(197, 165, 90, 0.3), 0 0 40px rgba(197, 165, 90, 0.1);
+        transition: all 0.3s ease;
+        position: relative; z-index: 1;
       `;
-      el.innerHTML = '🗿';
+      // Use a silhouette icon instead of emoji
+      el.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#050810" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
       el.title = char.name;
-      el.onmouseenter = () => { el.style.transform = 'scale(1.2)'; };
-      el.onmouseleave = () => { el.style.transform = 'scale(1)'; };
+      el.onmouseenter = () => {
+        el.style.transform = 'scale(1.25)';
+        el.style.boxShadow = '0 0 30px rgba(197, 165, 90, 0.5), 0 0 60px rgba(197, 165, 90, 0.2)';
+      };
+      el.onmouseleave = () => {
+        el.style.transform = 'scale(1)';
+        el.style.boxShadow = '0 0 20px rgba(197, 165, 90, 0.3), 0 0 40px rgba(197, 165, 90, 0.1)';
+      };
+
+      const popupHtml = `
+        <div style="
+          background: #111827;
+          color: #f5e6c8;
+          padding: 10px 14px;
+          border-radius: 8px;
+          border: 1px solid rgba(197, 165, 90, 0.2);
+          font-family: 'Playfair Display', Georgia, serif;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        ">
+          <strong style="font-size: 14px;">${char.name}</strong>
+          <br/>
+          <small style="color: #8892a8; font-family: 'Inter', sans-serif; font-size: 11px;">${char.historicalPeriod}</small>
+        </div>
+      `;
 
       const marker = new mapboxgl.Marker({ element: el })
         .setLngLat([char.statue.lng, char.statue.lat])
         .setPopup(
-          new mapboxgl.Popup({ offset: 25, closeButton: false })
-            .setHTML(`<div style="color:#1c1917;padding:4px"><strong>${char.name}</strong><br/><small>${char.historicalPeriod}</small></div>`)
+          new mapboxgl.Popup({ offset: 25, closeButton: false, className: 'mystery-popup' })
+            .setHTML(popupHtml)
         )
         .addTo(map);
 
@@ -90,6 +113,6 @@ export function GameMap({ center, characters, onCharacterClick }: MapProps) {
   }, [characters, onCharacterClick]);
 
   return (
-    <div ref={mapContainerRef} className="w-full h-full rounded-xl overflow-hidden" style={{ minHeight: '400px' }} />
+    <div ref={mapContainerRef} className="w-full h-full" style={{ minHeight: '400px' }} />
   );
 }
