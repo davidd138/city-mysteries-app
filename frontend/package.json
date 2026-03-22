@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --project=local",
+    "test:e2e:live": "playwright test --project=live"
   },
   "dependencies": {
     "aws-amplify": "^6.14.0",
