@@ -1,7 +1,7 @@
 # City Mysteries App - Progress Tracker V2
 
 ## Current Phase: PHASE 7
-## Current Step: 7.9
+## Current Step: 8.1
 
 ## PHASE 6: Deploy to AWS & Wire Up Real Values ✅
 - [x] 6.1 Bootstrap CDK
@@ -21,7 +21,7 @@
 - [x] 7.6 Redesign history page (detective logbook)
 - [x] 7.7 Redesign play page & character modal (immersive atmosphere)
 - [x] 7.8 VERIFY: build + e2e tests pass (13/13 pass)
-- [ ] 7.9 Deploy redesigned frontend, verify CloudFront
+- [x] 7.9 Deploy redesigned frontend, verify CloudFront (200 OK, new design live)
 
 ## PHASE 8: New Features — Incremental & Fully Tested
 - [ ] 8.1 User Profile Page (detective ID card)

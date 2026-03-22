@@ -37,6 +37,14 @@ export const LIST_GAME_SESSIONS = /* GraphQL */ `
   }
 `;
 
+export const GET_USER_PROFILE = /* GraphQL */ `
+  query GetUserProfile {
+    getUserProfile {
+      userId email name totalGames gamesSolved successRate memberSince
+    }
+  }
+`;
+
 export const GET_REALTIME_TOKEN = /* GraphQL */ `
   query GetRealtimeToken($characterId: String!, $mysteryId: String!) {
     getRealtimeToken(characterId: $characterId, mysteryId: $mysteryId) {

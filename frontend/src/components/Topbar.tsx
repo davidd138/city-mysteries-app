@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
 
 export function Topbar() {
   const { user, signOut } = useAuth();
@@ -29,7 +30,9 @@ export function Topbar() {
               <circle cx="9" cy="7" r="4" />
             </svg>
           </div>
-          <span className="text-sm text-fog-400">{user?.email}</span>
+          <Link href="/profile/" className="text-sm text-fog-400 hover:text-brass-400 transition-colors">
+            {user?.email}
+          </Link>
         </div>
         <div className="w-px h-5 bg-midnight-700" />
         <button

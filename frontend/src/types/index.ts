@@ -81,4 +81,14 @@ export type RealtimeToken = {
   expiresAt: number;
 };
 
+export type UserProfile = {
+  userId: string;
+  email: string;
+  name: string | null;
+  totalGames: number;
+  gamesSolved: number;
+  successRate: number;
+  memberSince: string | null;
+};
+
 export type TrainingState = 'idle' | 'connecting' | 'connected' | 'listening' | 'speaking' | 'error';

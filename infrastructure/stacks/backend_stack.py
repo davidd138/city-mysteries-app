@@ -315,6 +315,12 @@ class BackendStack(cdk.Stack):
         )
         openai_secret.grant_read(token_fn)
 
+        # getUserProfile
+        create_resolver(
+            "get_user_profile", "Query", "getUserProfile",
+            read_tables=["users", "game_sessions"],
+        )
+
         # ---- Exports ----
         self.graphql_url = api.graphql_url
         self.user_pool_id = user_pool.user_pool_id

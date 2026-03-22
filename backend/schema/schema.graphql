@@ -97,12 +97,23 @@ input SubmitSolutionInput {
   solution: String!
 }
 
+type UserProfile @aws_cognito_user_pools {
+  userId: String!
+  email: String!
+  name: String
+  totalGames: Int!
+  gamesSolved: Int!
+  successRate: Float!
+  memberSince: String
+}
+
 type Query {
   listMysteries: [Mystery!]! @aws_cognito_user_pools
   getMystery(id: String!): Mystery @aws_cognito_user_pools
   getGameSession(id: String!): GameSession @aws_cognito_user_pools
   listGameSessions(limit: Int, nextToken: String): GameSessionList! @aws_cognito_user_pools
   getRealtimeToken(characterId: String!, mysteryId: String!): RealtimeToken! @aws_cognito_user_pools
+  getUserProfile: UserProfile! @aws_cognito_user_pools
 }
 
 type Mutation {
